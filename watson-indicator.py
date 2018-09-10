@@ -7,7 +7,7 @@ gi.require_version('AppIndicator3', '0.1')
 from gi.repository import Gtk, AppIndicator3, GObject
 import time
 from threading import Thread
-from subprocess import check_output, Popen
+from subprocess import getoutput, Popen
 
 class Indicator():
     def __init__(self):
@@ -68,7 +68,7 @@ class Indicator():
     def update_stop_restart_label(self, project_active):
         text = ""
         if project_active: # stop project (time)
-            text = "Stop (" + check_output(["watson", "status", "-e"]).strip() + ")"
+            text = "Stop (" + getoutput("watson status -e").strip() + ")"
             text = text.replace("minutes ago", "min")
         else: # restart project
             text = "Restart '" + self.last_project + "'"
@@ -81,7 +81,7 @@ class Indicator():
         while True:
             time.sleep(1)
             # "project" or "No project started"
-            project = check_output(["watson", "status", "-p"]).strip()
+            project = getoutput("watson status -p").strip()
             if "No project started" in project:
                 project = ""
                 project_active = False
