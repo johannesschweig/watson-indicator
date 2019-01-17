@@ -61,11 +61,16 @@ class Indicator():
 
     # get ticket submenu
     # show: if there should be a separate show call for the menuitems
+    # returns None if no tickets or a GtkMenuItem with a submenu with the tickets
     def get_tickets(self, show):
+        tickets = self.get_issues()
+        # return None if there are no tickets
+        if len(tickets) == 0:
+            return None
         # create menu
         item_start_ticket = Gtk.MenuItem('Start ticket')
         menu_tickets = Gtk.Menu()
-        for ticket in self.get_issues():
+        for ticket in tickets:
             item = Gtk.MenuItem(ticket)
             menu_tickets.append(item)
             # get code of issue
@@ -95,8 +100,10 @@ class Indicator():
         self.item_stop_restart.connect('activate', self.stop_restart)
         self.menu.append(self.item_stop_restart)
         # menu item "Start ticket"
-        self.item_start_ticket = self.get_tickets(False)
-        self.menu.append(self.item_start_ticket)
+        its = self.get_tickets(False)
+        if its is not None:
+            self.item_start_ticket = its
+            self.menu.append(self.item_start_ticket)
         # menu item "Quit"
         item_quit = Gtk.MenuItem('Quit')
         item_quit.connect('activate', self.quit)
@@ -136,10 +143,14 @@ class Indicator():
         new_issues = self.get_issues()
         if new_issues != self.issues:
             self.issues = new_issues
-            GObject.idle_add(self.menu.remove, self.item_start_ticket)
-            self.item_start_ticket = self.get_tickets(True)
-            GObject.idle_add(self.menu.insert, self.item_start_ticket, 1)
-            self.item_start_ticket.show()
+            # check if item_start_ticket has been defined
+            if hasattr(self, 'item_start_ticket'):
+                GObject.idle_add(self.menu.remove, self.item_start_ticket)
+            its = self.get_tickets(True)
+            if its is not None:
+                self.item_start_ticket = its
+                GObject.idle_add(self.menu.insert, self.item_start_ticket, 1)
+                self.item_start_ticket.show()
 
     def update(self):
         # updates the icon, indicator and menu item labels
