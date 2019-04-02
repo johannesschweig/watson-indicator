@@ -57,7 +57,15 @@ class Indicator():
     # widget: reference to the widget where the function was triggered (Don't know how to avoid this)
     # issue_code: issue code of the ticket to be started
     def start_issue(self, widget, issue_code):
-        Popen(['watson', 'start', issue_code, '+verification', '+scrum'])
+        if issue_code.startswith('AP'):
+            scrum = '+scrum1'
+        elif issue_code.startswith('WH'):
+            scrum = '+scrum2'
+        elif issue_code.startswith('SRV'):
+            scrum = '+scrum3'
+        else:
+            scrum = ''
+        Popen(['watson', 'start', issue_code, scrum])
 
     # get ticket submenu
     # show: if there should be a separate show call for the menuitems
