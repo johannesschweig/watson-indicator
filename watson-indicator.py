@@ -51,6 +51,7 @@ class Indicator():
                     if len(ticket) > 30:
                         ticket = ticket[:30] + '...'
                     tickets.append(ticket)
+        tickets = list(dict.fromkeys(tickets))
         return tickets
 
     # start working on issue
