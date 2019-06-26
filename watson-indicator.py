@@ -46,7 +46,8 @@ class Indicator():
         for tab_obj in data['windows'][0]['tabs']:
             for entry in tab_obj['entries']:
                 # if tab is jira issue
-                if entry['url'].startswith('https://knime-com.atlassian.net/browse/'):
+                if entry['url'].startswith('https://knime-com.atlassian.net/browse/') and not entry['title'].startswith('https://knime-com'):
+                    print(entry['url'], entry['title'])
                     ticket = entry['title'].replace(' - JIRA', '')
                     # AP-XXXX: 2 pull requests
                     if not ticket.startswith('['):
