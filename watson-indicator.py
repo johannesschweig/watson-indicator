@@ -47,7 +47,6 @@ class Indicator():
             for entry in tab_obj['entries']:
                 # if tab is jira issue
                 if entry['url'].startswith('https://knime-com.atlassian.net/browse/') and not entry['title'].startswith('https://knime-com'):
-                    print(entry['url'], entry['title'])
                     ticket = entry['title'].replace(' - JIRA', '')
                     # AP-XXXX: 2 pull requests
                     if not ticket.startswith('['):
@@ -64,15 +63,7 @@ class Indicator():
     # widget: reference to the widget where the function was triggered (Don't know how to avoid this)
     # issue_code: issue code of the ticket to be started
     def start_issue(self, widget, issue_code):
-        if issue_code.startswith('AP'):
-            scrum = '+scrum1'
-        elif issue_code.startswith('WH'):
-            scrum = '+scrum2'
-        elif issue_code.startswith('SRV'):
-            scrum = '+scrum3'
-        else:
-            scrum = ''
-        Popen(['watson', 'start', issue_code, scrum])
+        Popen(['watson', 'start', issue_code])
 
     # get ticket submenu
     # show: if there should be a separate show call for the menuitems
